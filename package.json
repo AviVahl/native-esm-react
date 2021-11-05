@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc",
     "prestart": "npm run build",
-    "start": "serve"
+    "start": "serve",
+    "test": "npm run build"
   },
   "dependencies": {
     "react": "^17.0.2",
