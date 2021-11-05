@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "description": "native esm react example",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
+  "exports": "./dist/index.js",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "prestart": "npm run build",
