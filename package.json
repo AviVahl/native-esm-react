@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "description": "native esm react example",
-  "main": "./dist/index.js",
-  "exports": "./dist/index.js",
+  "main": "./dist/server/index.js",
+  "exports": "./dist/server/index.js",
   "type": "module",
   "scripts": {
     "clean": "node scripts/clean.js",
