@@ -8,9 +8,11 @@
   "type": "module",
   "scripts": {
     "clean": "node scripts/clean.js",
+    "prebuild": "npm run clean",
     "build": "tsc",
     "prestart": "npm run build",
     "start": "serve",
+    "watch": "npm run build -- -w",
     "test": "npm run build"
   },
   "dependencies": {
