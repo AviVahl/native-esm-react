@@ -7,6 +7,7 @@
   "exports": "./dist/index.js",
   "type": "module",
   "scripts": {
+    "clean": "node scripts/clean.js",
     "build": "tsc",
     "prestart": "npm run build",
     "start": "serve",
