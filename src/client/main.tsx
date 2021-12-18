@@ -1,6 +1,6 @@
 import React, { StrictMode } from "react";
 import ReactDOM from "react-dom";
-import { App } from "./app.jsx";
+import { App } from "./app.js";
 
 const rootContainerId = "SITE_MAIN";
 
