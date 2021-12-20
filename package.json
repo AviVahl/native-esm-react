@@ -11,7 +11,7 @@
     "prebuild": "npm run clean",
     "build": "tsc",
     "prestart": "npm run build",
-    "start": "serve",
+    "start": "node dist/server/main.js",
     "watch": "npm run build -- -w",
     "test": "npm run build"
   },
@@ -25,7 +25,6 @@
     "@types/node": "16",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
-    "serve": "^13.0.2",
     "typescript": "~4.5.4"
   },
   "repository": {
