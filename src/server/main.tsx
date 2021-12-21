@@ -23,7 +23,7 @@ const indexHTML = await readFile(indexPath, "utf8");
 const renderedApp = renderAppToString(LOCAL_ADDRESS);
 const finalHTML = indexHTML.replace(
   `<div id="SITE_MAIN"></div>`,
-  `<div id="SITE_MAIN">${renderedApp}</div>`
+  `<div id="SITE_MAIN" data-ssr>${renderedApp}</div>`
 );
 
 const httpServer = createServer(async ({ url: requestUrl = "" }, response) => {
