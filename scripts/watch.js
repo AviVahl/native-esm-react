@@ -29,7 +29,10 @@ function watchAndSpawn(tsconfigPath, command, commandArgs) {
   }
 
   /** @type import('typescript').WatchStatusReporter */
-  const originalStatusReporter = createWatchStatusReporter(sys, /*pretty*/ true);
+  const originalStatusReporter = createWatchStatusReporter(
+    sys,
+    /*pretty*/ true
+  );
 
   /** @type import('typescript').WatchStatusReporter */
   const statusReporter = (diagnostic, newLine, options, errorCount) => {
@@ -51,10 +54,12 @@ function watchAndSpawn(tsconfigPath, command, commandArgs) {
   return createWatchProgram(watchCompilerHost);
 }
 
-const tsconfigPath = fileURLToPath(new URL("../tsconfig.json", import.meta.url));
+const tsconfigPath = fileURLToPath(
+  new URL("../tsconfig.json", import.meta.url)
+);
 const [cmd, ...args] = process.argv.slice(2);
-if (typeof cmd !== 'string') {
-  throw new Error(`"watch" must be given a command to execute`)  
+if (typeof cmd !== "string") {
+  throw new Error(`"watch" must be given a command to execute`);
 }
 
 watchAndSpawn(tsconfigPath, cmd, args);
