@@ -1,7 +1,6 @@
 // @ts-check
 
 import { spawn } from "node:child_process";
-import { once } from "node:events";
 import { URL, fileURLToPath } from "node:url";
 import ts from "typescript";
 const {
@@ -20,19 +19,12 @@ const {
 function watchAndSpawn(tsconfigPath, command, commandArgs) {
   /** @type import('child_process').ChildProcess | undefined */
   let cliProcess = undefined;
-  let closing = false
   async function restartCliProcess() {
-    if (closing) {
-      return;
-    }
     if (cliProcess) {
-      closing = true
       cliProcess.kill();
-      await once(cliProcess, 'close')
-      closing = false
     }
     console.log([command, ...commandArgs].join(" "));
-    cliProcess = spawn(command, commandArgs, { shell: true, stdio: "inherit" });
+    cliProcess = spawn(command, commandArgs, { stdio: "inherit" });
   }
 
   /** @type import('typescript').WatchStatusReporter */

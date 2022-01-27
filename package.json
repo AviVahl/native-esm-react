@@ -11,7 +11,7 @@
     "prebuild": "npm run clean",
     "build": "tsc",
     "start": "node --enable-source-maps dist/server/main.js",
-    "watch": "node scripts/watch.js npm start",
+    "watch": "node scripts/watch.js node --enable-source-maps dist/server/main.js",
     "test": "npm run build"
   },
   "dependencies": {
