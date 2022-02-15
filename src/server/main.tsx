@@ -5,7 +5,6 @@ import { createServer, STATUS_CODES } from "node:http";
 import { join } from "node:path";
 import { fileURLToPath, URL } from "node:url";
 import { once } from "node:events";
-import { renderAppToString } from "./render.js";
 import mime from "mime";
 
 const { define: defineMimeType, getType: getMimeType } = mime;
@@ -19,36 +18,42 @@ const indexContentType = getContentType(indexPath);
 const PORT = 3000;
 const LOCAL_ADDRESS = `http://localhost:${PORT}/`;
 
-const indexHTML = await readFile(indexPath, "utf8");
-const renderedApp = renderAppToString(LOCAL_ADDRESS);
-const finalHTML = indexHTML.replace(
-  `<div id="SITE_MAIN"></div>`,
-  `<div id="SITE_MAIN" data-ssr>${renderedApp}</div>`
-);
-
 const httpServer = createServer(async ({ url: requestUrl = "" }, response) => {
-  // ignore searchParams and hash, and then decode escaped characters (e.g. %20 -> space)
-  const requestPath = decodeURI(new URL(requestUrl, LOCAL_ADDRESS).pathname);
+  try {
+    // ignore searchParams and hash, and then decode escaped characters (e.g. %20 -> space)
+    const requestPath = decodeURI(new URL(requestUrl, LOCAL_ADDRESS).pathname);
 
-  if (requestPath === "/") {
-    response.statusCode = 200;
-    response.statusMessage = STATUS_CODES[200]!;
-    response.setHeader("Content-Type", indexContentType);
-    response.end(finalHTML);
-  } else {
-    const fsPath = join(basePath, requestPath);
-    const fsStats = await lstatSafe(fsPath);
-    if (fsStats?.isFile()) {
+    if (requestPath === "/") {
+      const indexHTML = await readFile(indexPath, "utf8");
+      const { renderAppToString } = await import("./render.js");
+      const renderedApp = renderAppToString(LOCAL_ADDRESS);
+      const finalHTML = indexHTML.replace(
+        `<div id="SITE_MAIN"></div>`,
+        `<div id="SITE_MAIN" data-ssr>${renderedApp}</div>`
+      );
       response.statusCode = 200;
       response.statusMessage = STATUS_CODES[200]!;
-      response.setHeader("Content-Type", getContentType(fsPath));
-      response.setHeader("Content-Length", fsStats.size);
-      await pipeline(createReadStream(fsPath), response);
+      response.setHeader("Content-Type", indexContentType);
+      response.end(finalHTML);
     } else {
-      response.statusCode = 404;
-      response.statusMessage = STATUS_CODES[404]!;
-      response.end();
+      const fsPath = join(basePath, requestPath);
+      const fsStats = await lstatSafe(fsPath);
+      if (fsStats?.isFile()) {
+        response.statusCode = 200;
+        response.statusMessage = STATUS_CODES[200]!;
+        response.setHeader("Content-Type", getContentType(fsPath));
+        response.setHeader("Content-Length", fsStats.size);
+        await pipeline(createReadStream(fsPath), response);
+      } else {
+        response.statusCode = 404;
+        response.statusMessage = STATUS_CODES[404]!;
+        response.end();
+      }
     }
+  } catch (e: unknown) {
+    response.statusCode = 500;
+    response.statusMessage = STATUS_CODES[500]!;
+    response.end((e as Error)?.stack || e);
   }
 });
 httpServer.listen(PORT);
