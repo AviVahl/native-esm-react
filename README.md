@@ -13,6 +13,7 @@ Native esm React example.
 - Asset references using `new URL('./asset.svg, import.meta.url)` are shown and work for SSR as well. Assets must live outside the `src` tree so relative references from `dist` work.
 - A _really_ cool `"watch"` script that auto-reloads the server as well while giving a `tsc -w` like experience.
 - Tiny amount of deps. I dare you to `npm i` and look at `node_modules`. Sensible, right?
+- React itself is _not_ published as native ESM, so the files in the `esm-bridge` folder allow browser ESM imports to use the UMD versions of `react`/`react-dom`, which are loaded by `index.html`.
 
 ## Getting Started
 
