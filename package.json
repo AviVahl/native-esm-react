@@ -10,8 +10,9 @@
     "clean": "node scripts/clean.js",
     "prebuild": "npm run clean",
     "build": "tsc",
-    "start": "node --enable-source-maps dist/server/main.js",
-    "watch": "node scripts/watch.js node --enable-source-maps dist/server/main.js",
+    "start": "node scripts/watch.js node --enable-source-maps dist/server/main.js",
+    "preserver": "npm run build",
+    "server": "node --enable-source-maps dist/server/main.js",
     "test": "npm run build"
   },
   "dependencies": {

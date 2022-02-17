@@ -19,7 +19,7 @@ Native esm React example.
 
 - Clone repository.
 - `npm i`
-- `npm run watch`
+- `npm start`
 - Open `http://localhost:3000/` in a browser [compatible with import maps](https://caniuse.com/import-maps).
 
 ## License
