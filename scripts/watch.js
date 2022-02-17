@@ -43,7 +43,7 @@ function watchAndSpawn(tsconfigPath, command, commandArgs) {
 
   const watchCompilerHost = createWatchCompilerHost(
     tsconfigPath,
-    undefined,
+    { noUnusedLocals: false, noUnusedParameters: false },
     sys,
     undefined,
     undefined,
