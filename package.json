@@ -3,14 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "description": "native esm react example",
-  "main": "./dist/server/index.js",
-  "exports": "./dist/server/index.js",
   "type": "module",
   "scripts": {
     "clean": "node scripts/clean.js",
     "prebuild": "npm run clean",
     "build": "tsc",
-    "start": "node scripts/watch.js node --enable-source-maps dist/server/main.js",
+    "start": "node scripts/start.js",
     "preserver": "npm run build",
     "server": "node --enable-source-maps dist/server/main.js",
     "test": "npm run build"
@@ -25,7 +23,9 @@
     "@types/node": "16",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
-    "typescript": "~4.5.5"
+    "@types/ws": "^8.2.3",
+    "typescript": "~4.5.5",
+    "ws": "^8.5.0"
   },
   "engines": {
     "node": ">=16",

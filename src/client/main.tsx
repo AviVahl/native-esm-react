@@ -7,16 +7,20 @@ const rootContainerId = "SITE_MAIN";
 const container =
   document.getElementById(rootContainerId) ?? createContainer(document.body);
 
-const appReactElement = (
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
-
 if (container.hasAttribute("data-ssr")) {
-  ReactDOM.hydrate(appReactElement, container);
+  ReactDOM.hydrate(
+    <StrictMode>
+      <App renderType="server-side" />
+    </StrictMode>,
+    container
+  );
 } else {
-  ReactDOM.render(appReactElement, container);
+  ReactDOM.render(
+    <StrictMode>
+      <App renderType="client-side" />
+    </StrictMode>,
+    container
+  );
 }
 
 function createContainer(targetParent: Element) {
