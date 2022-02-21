@@ -28,12 +28,12 @@ async function refreshCliProcess() {
     cliProcess.send("print-address");
     cliProcess.send("reload");
   } else {
-    cliProcess = fork(serverMainPath, ["--live", ...serverArgs], {
+    cliProcess = fork(serverMainPath, serverArgs, {
       stdio: "inherit",
       execArgv: ["--enable-source-maps"],
     });
   }
-  console.log(`node --enable-source-maps ${serverMainPath} --live`);
+  console.log(`node --enable-source-maps ${serverMainPath} ${serverArgs.join(' ')}`);
 }
 
 /** @type import('typescript').WatchStatusReporter */

@@ -8,7 +8,7 @@
     "clean": "node scripts/clean.js",
     "prebuild": "npm run clean",
     "build": "tsc",
-    "start": "node scripts/start.js",
+    "start": "node scripts/start.js --live",
     "preserver": "npm run build",
     "server": "node --enable-source-maps dist/server/main.js",
     "test": "npm run build"
