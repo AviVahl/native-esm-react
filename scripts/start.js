@@ -33,7 +33,9 @@ async function refreshCliProcess() {
       execArgv: ["--enable-source-maps"],
     });
   }
-  console.log(`node --enable-source-maps ${serverMainPath} ${serverArgs.join(' ')}`);
+  console.log(
+    `node --enable-source-maps ${serverMainPath} ${serverArgs.join(" ")}`
+  );
 }
 
 /** @type import('typescript').WatchStatusReporter */
