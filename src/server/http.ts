@@ -31,6 +31,7 @@ export async function respondWithFile(
   response.statusCode = 200;
   response.statusMessage = STATUS_CODES[200]!;
   response.setHeader("Content-Type", getContentType(fsPath));
+  response.setHeader("Cache-Control", "no-cache");
   const fileExtension = extname(fsPath);
   if (
     injectLiveHtml &&
@@ -51,7 +52,8 @@ export function respondWithError(
 ) {
   response.statusCode = 500;
   response.statusMessage = STATUS_CODES[500]!;
-  response.setHeader("Content-Type", `text/html`);
+  response.setHeader("Content-Type", "text/html");
+  response.setHeader("Cache-Control", "no-cache");
   const errorMessage = (e as Error)?.stack ?? String(e);
   console.error(errorMessage);
   const errorPage = generateErrorPage(errorMessage);
