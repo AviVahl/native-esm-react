@@ -84,7 +84,14 @@ export async function createAppServer({
         const fsPath = join(basePath, requestPath);
         const fsStats = await safePromise(lstat(fsPath));
         if (fsStats?.isFile()) {
-          await respondWithFile(response, fsPath, fsStats, live, production);
+          await respondWithFile(
+            request,
+            response,
+            fsPath,
+            fsStats,
+            live,
+            production
+          );
         } else {
           response.statusCode = 404;
           response.statusMessage = STATUS_CODES[404]!;

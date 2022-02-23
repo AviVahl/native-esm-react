@@ -1,8 +1,9 @@
 import { createReadStream, Stats } from "node:fs";
 import { readFile } from "node:fs/promises";
-import { ServerResponse, STATUS_CODES } from "node:http";
+import { IncomingMessage, ServerResponse, STATUS_CODES } from "node:http";
 import { extname } from "node:path";
 import { pipeline } from "node:stream/promises";
+import { createGzip } from "node:zlib";
 import mime from "mime";
 import { injectLiveClient } from "./live-client.js";
 
@@ -23,6 +24,7 @@ export function getContentType(path: string): string {
 }
 
 export async function respondWithFile(
+  request: IncomingMessage,
   response: ServerResponse,
   fsPath: string,
   fsStats: Stats,
@@ -45,9 +47,23 @@ export async function respondWithFile(
       : liveHtml;
     response.end(modeAdjustedHtml);
   } else {
-    response.setHeader("Content-Length", fsStats.size);
+    response.setHeader("Vary", "Accept-Encoding");
+    const acceptEncoding =
+      (request.headers["accept-encoding"] as string | undefined) ?? "";
+
+    const acceptedEncodings = new Set(
+      // super naive; not according to spec
+      acceptEncoding.split(", ").map((def) => def.split(";").at(0)!)
+    );
+    const fileStream = createReadStream(fsPath);
     try {
-      await pipeline(createReadStream(fsPath), response);
+      if (acceptedEncodings.has("gzip")) {
+        response.writeHead(200, { "Content-Encoding": "gzip" });
+        await pipeline(fileStream, createGzip(), response);
+      } else {
+        response.writeHead(200, { "Content-Length": fsStats.size });
+        await pipeline(fileStream, response);
+      }
     } catch (e) {
       if ((e as NodeJS.ErrnoException)?.code !== "ERR_STREAM_PREMATURE_CLOSE") {
         throw e;
