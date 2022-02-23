@@ -26,19 +26,24 @@ export async function respondWithFile(
   response: ServerResponse,
   fsPath: string,
   fsStats: Stats,
-  injectLiveHtml: boolean
+  injectLiveHtml: boolean,
+  production: boolean
 ) {
   response.statusCode = 200;
   response.statusMessage = STATUS_CODES[200]!;
   response.setHeader("Content-Type", getContentType(fsPath));
   response.setHeader("Cache-Control", "no-cache");
   const fileExtension = extname(fsPath);
-  if (
-    injectLiveHtml &&
-    (fileExtension === ".html" || fileExtension === ".htm")
-  ) {
+  const isHtmlFile = fileExtension === ".html" || fileExtension === ".htm";
+  if (isHtmlFile && (injectLiveHtml || production)) {
     const htmlFileContent = await readFile(fsPath, "utf8");
-    response.end(injectLiveClient(htmlFileContent));
+    const liveHtml = injectLiveHtml
+      ? injectLiveClient(htmlFileContent)
+      : htmlFileContent;
+    const modeAdjustedHtml = production
+      ? liveHtml.replaceAll(".development.js", ".production.min.js")
+      : liveHtml;
+    response.end(modeAdjustedHtml);
   } else {
     response.setHeader("Content-Length", fsStats.size);
     await pipeline(createReadStream(fsPath), response);

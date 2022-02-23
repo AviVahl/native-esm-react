@@ -16,6 +16,7 @@ import { injectLiveClient } from "./live-client.js";
 
 const args = process.argv.slice(2);
 const live = args.includes("--live");
+const production = args.includes("--production");
 const baseURL = new URL("../..", import.meta.url).href;
 const basePath = fileURLToPath(baseURL);
 const indexPath = join(basePath, "index.html");
@@ -38,12 +39,14 @@ function printAddress() {
 }
 
 async function httpRequestHandler(
-  { url: requestUrl = "" }: IncomingMessage,
+  request: IncomingMessage,
   response: ServerResponse
 ): Promise<void> {
   try {
     // ignore searchParams and hash, and then decode escaped characters (e.g. %20 -> space)
-    const requestPath = decodeURI(new URL(requestUrl, LOCAL_ADDRESS).pathname);
+    const requestPath = decodeURI(
+      new URL(request.url ?? "", LOCAL_ADDRESS).pathname
+    );
 
     if (requestPath === "/") {
       await respondWithSSR(response);
@@ -51,7 +54,7 @@ async function httpRequestHandler(
       const fsPath = join(basePath, requestPath);
       const fsStats = await lstatSafe(fsPath);
       if (fsStats?.isFile()) {
-        await respondWithFile(response, fsPath, fsStats, live);
+        await respondWithFile(response, fsPath, fsStats, live, production);
       } else {
         response.statusCode = 404;
         response.statusMessage = STATUS_CODES[404]!;
@@ -66,7 +69,12 @@ async function httpRequestHandler(
 async function respondWithSSR(response: ServerResponse) {
   const indexHTML = await readFile(indexPath, "utf8");
   if (!ssrWorker) {
-    ssrWorker = new Worker(new URL("./ssr-worker.js", import.meta.url));
+    const env = production
+      ? { ...process.env, NODE_ENV: "production" }
+      : process.env;
+    ssrWorker = new Worker(new URL("./ssr-worker.js", import.meta.url), {
+      env,
+    });
     try {
       await once(ssrWorker, "online");
     } catch (e) {
@@ -84,9 +92,12 @@ async function respondWithSSR(response: ServerResponse) {
     `<div id="SITE_MAIN"></div>`,
     `<div id="SITE_MAIN" data-ssr>${renderedAppWithHttpAssets}</div>`
   );
-  const finalHTML = live
-    ? injectLiveClient(htmlWithRenderedApp)
+  const modeAdjustedHTML = production
+    ? htmlWithRenderedApp.replaceAll(".development.js", ".production.min.js")
     : htmlWithRenderedApp;
+  const finalHTML = live
+    ? injectLiveClient(modeAdjustedHTML)
+    : modeAdjustedHTML;
   response.statusCode = 200;
   response.statusMessage = STATUS_CODES[200]!;
   response.setHeader("Content-Type", indexContentType);
