@@ -57,8 +57,10 @@ export function respondWithError(
 ) {
   response.statusCode = 500;
   response.statusMessage = STATUS_CODES[500]!;
-  response.setHeader("Content-Type", "text/html");
-  response.setHeader("Cache-Control", "no-cache");
+  if (!response.headersSent) {
+    response.setHeader("Content-Type", "text/html");
+    response.setHeader("Cache-Control", "no-cache");
+  }
   const errorMessage = (e as Error)?.stack ?? String(e);
   console.error(errorMessage);
   const errorPage = generateErrorPage(errorMessage);
