@@ -1,6 +1,6 @@
 import { parentPort } from "node:worker_threads";
 import React, { StrictMode } from "react";
-import ReactDOMServer from "react-dom/server.js";
+import ReactDOMServer from "react-dom/server";
 
 if (!parentPort) {
   throw new Error("this file should be evaluated in a worker thread");

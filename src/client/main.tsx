@@ -1,5 +1,5 @@
 import React, { StrictMode } from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import { App } from "./app.js";
 
 const rootContainerId = "SITE_MAIN";
@@ -15,9 +15,9 @@ const appElement = (
 );
 
 if (isSSR) {
-  ReactDOM.hydrate(appElement, container);
+  ReactDOM.hydrateRoot(container, appElement);
 } else {
-  ReactDOM.render(appElement, container);
+  ReactDOM.createRoot(container).render(appElement);
 }
 
 function createContainer(targetParent: Element) {
