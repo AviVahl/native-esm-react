@@ -74,6 +74,7 @@ async function respondWithSSR(response: ServerResponse) {
       : process.env;
     ssrWorker = new Worker(new URL("./ssr-worker.js", import.meta.url), {
       env,
+      execArgv: process.execArgv,
     });
     try {
       await once(ssrWorker, "online");
