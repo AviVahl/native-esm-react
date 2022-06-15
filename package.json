@@ -15,11 +15,14 @@
     "test": "node --enable-source-maps dist/test/sanity.e2e.js"
   },
   "dependencies": {
+    "marked": "^4.1.0",
+    "marked-react": "^1.3.0",
     "mime": "^3.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@types/marked": "^4.0.7",
     "@types/mime": "^3.0.1",
     "@types/node": "16",
     "@types/react": "^18.0.21",

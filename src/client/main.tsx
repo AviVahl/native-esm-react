@@ -1,6 +1,9 @@
 import React, { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import { App } from "./app.js";
+import Markdown from "marked-react";
+
+const readmeURL = new URL("../../README.md", import.meta.url);
+const md = await (await fetch(readmeURL.href)).text();
 
 const rootContainerId = "SITE_MAIN";
 
@@ -10,7 +13,7 @@ const container =
 const isSSR = container.hasAttribute("data-ssr");
 const appElement = (
   <StrictMode>
-    <App renderType={isSSR ? "server-side" : "client-side"} />
+    <Markdown value={md} />
   </StrictMode>
 );
 
