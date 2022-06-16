@@ -6,6 +6,7 @@ export function injectLiveClient(html: string) {
         `  <script>
       const wsURL = new URL(window.location.href);
       wsURL.protocol = "ws";
+      wsURL.hash = "";
       const ws = new WebSocket(wsURL);
       ws.addEventListener("message", ({ data }) => {
         if (data === "reload") {
