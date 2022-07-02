@@ -46,7 +46,13 @@ export async function respondWithFile(
     response.end(modeAdjustedHtml);
   } else {
     response.setHeader("Content-Length", fsStats.size);
-    await pipeline(createReadStream(fsPath), response);
+    try {
+      await pipeline(createReadStream(fsPath), response);
+    } catch (e) {
+      if ((e as NodeJS.ErrnoException)?.code !== "ERR_STREAM_PREMATURE_CLOSE") {
+        throw e;
+      }
+    }
   }
 }
 
