@@ -11,7 +11,8 @@
     "start": "node scripts/start.js --live",
     "preserver": "npm run build",
     "server": "node --enable-source-maps dist/server/main.js",
-    "test": "npm run build"
+    "pretest": "npm run build",
+    "test": "node --enable-source-maps dist/test/sanity.e2e.js"
   },
   "dependencies": {
     "mime": "^3.0.0",
@@ -24,6 +25,7 @@
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "@types/ws": "^8.5.3",
+    "playwright": "^1.24.2",
     "typescript": "~4.7.4",
     "ws": "^8.8.1"
   },
