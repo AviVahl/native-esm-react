@@ -9,12 +9,12 @@ import { join } from "node:path";
 import { fileURLToPath, URL } from "node:url";
 import { once } from "node:events";
 import { Worker } from "node:worker_threads";
+import type { AddressInfo } from "node:net";
 import { WebSocketServer } from "ws";
 import { getContentType, respondWithError, respondWithFile } from "./http.js";
 import { injectLiveClient } from "./live-client.js";
 
 const baseURL = new URL("../..", import.meta.url).href;
-const DEFAULT_PORT = 3000;
 
 export interface StartHttpServerOptions {
   port?: number;
@@ -23,13 +23,12 @@ export interface StartHttpServerOptions {
 }
 
 export async function createAppServer({
-  port = DEFAULT_PORT,
+  port,
   production = false,
   live = false,
 }: StartHttpServerOptions = {}) {
   const basePath = fileURLToPath(baseURL);
   const indexPath = join(basePath, "index.html");
-  const localAddress = `http://localhost:${port}/`;
   const indexContentType = getContentType(indexPath);
 
   let ssrWorker: Worker | undefined;
@@ -38,9 +37,11 @@ export async function createAppServer({
 
   const wss = new WebSocketServer({ server: httpServer });
   await once(httpServer.listen(port), "listening");
+  const { port: actualPort } = httpServer.address() as AddressInfo;
+  const localAddress = `http://localhost:${actualPort}/`;
 
   return {
-    localAddress: localAddress,
+    localAddress,
     close,
     reload,
   };
