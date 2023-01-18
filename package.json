@@ -12,7 +12,7 @@
     "preserver": "npm run build",
     "server": "node --enable-source-maps dist/server/main.js",
     "pretest": "npm run build",
-    "test": "node --enable-source-maps dist/test/sanity.e2e.js"
+    "test": "node --test --enable-source-maps"
   },
   "dependencies": {
     "mime": "^3.0.0",

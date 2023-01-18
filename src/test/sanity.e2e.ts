@@ -1,24 +1,33 @@
+import { afterEach, describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { chromium, firefox } from "playwright";
 import { createAppServer } from "../server/app-server.js";
 
+const browsers = [chromium, firefox];
 const headless = true;
 const firefoxUserPrefs = { "dom.importMaps.enabled": true };
-const appServer = await createAppServer();
 
-for (const browserType of [chromium, firefox]) {
-  const browserName = browserType.name();
-  const browser = await browserType.launch({ headless, firefoxUserPrefs });
+describe("sanity e2e", () => {
+  const disposables: Array<() => Promise<void>> = [];
+  afterEach(async () => {
+    for (const dispose of disposables.reverse()) {
+      await dispose();
+    }
+    disposables.length = 0;
+  });
 
-  console.log(`checking ${browserName} ${browser.version()}`);
+  for (const browserType of browsers) {
+    it(`loads in ${browserType.name()}`, async () => {
+      const appServer = await createAppServer();
+      disposables.push(() => appServer.close());
 
-  const page = await browser.newPage();
-  await page.goto(appServer.localAddress);
+      const browser = await browserType.launch({ headless, firefoxUserPrefs });
+      disposables.push(() => browser.close());
 
-  assert.ok(await page.locator("text=server-side").isVisible());
+      const page = await browser.newPage();
+      await page.goto(appServer.localAddress);
 
-  await browser.close();
-  console.log(`${browserName} OK`);
-}
-
-await appServer.close();
+      assert.ok(await page.locator("text=server-side").isVisible());
+    });
+  }
+});
