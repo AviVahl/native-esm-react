@@ -5,7 +5,6 @@ import { createAppServer } from "../server/app-server.js";
 
 const browsers = [chromium, firefox];
 const headless = true;
-const firefoxUserPrefs = { "dom.importMaps.enabled": true };
 
 describe("sanity e2e", () => {
   const disposables: Array<() => Promise<void>> = [];
@@ -21,7 +20,7 @@ describe("sanity e2e", () => {
       const appServer = await createAppServer();
       disposables.push(() => appServer.close());
 
-      const browser = await browserType.launch({ headless, firefoxUserPrefs });
+      const browser = await browserType.launch({ headless });
       disposables.push(() => browser.close());
 
       const page = await browser.newPage();
