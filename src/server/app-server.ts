@@ -1,15 +1,15 @@
+import { once } from "node:events";
 import { lstat, readFile } from "node:fs/promises";
 import {
-  createServer,
-  IncomingMessage,
-  ServerResponse,
   STATUS_CODES,
+  createServer,
+  type IncomingMessage,
+  type ServerResponse,
 } from "node:http";
-import { join } from "node:path";
-import { fileURLToPath, URL } from "node:url";
-import { once } from "node:events";
-import { Worker } from "node:worker_threads";
 import type { AddressInfo } from "node:net";
+import { join } from "node:path";
+import { URL, fileURLToPath } from "node:url";
+import { Worker } from "node:worker_threads";
 import { WebSocketServer } from "ws";
 import { getContentType, respondWithError, respondWithFile } from "./http.js";
 import { injectLiveClient } from "./live-client.js";
