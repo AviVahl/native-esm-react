@@ -1,18 +1,20 @@
+import { Mime } from "mime/lite";
+import otherTypes from "mime/types/other.js";
+import standardTypes from "mime/types/standard.js";
 import { createReadStream, Stats } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { ServerResponse, STATUS_CODES } from "node:http";
 import { extname } from "node:path";
 import { pipeline } from "node:stream/promises";
-import mime from "mime";
 import { injectLiveClient } from "./live-client.js";
 
-const { define: defineMimeType, getType: getMimeType } = mime;
+const mime = new Mime(standardTypes, otherTypes);
 
 // .ts defaults to "video/mp2t" (media container) and .tsx is not defined
-defineMimeType({ "text/plain": ["ts", "tsx", "md"] }, true);
+mime.define({ "text/plain": ["ts", "tsx", "md"] }, true);
 
 export function getContentType(path: string): string {
-  const contentType = getMimeType(path) ?? "text/plain";
+  const contentType = mime.getType(path) ?? "text/plain";
 
   const isTextFile =
     contentType.startsWith("text/") ||
