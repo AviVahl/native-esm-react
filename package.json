@@ -24,8 +24,8 @@
     "@types/react": "^18.2.74",
     "@types/react-dom": "^18.2.24",
     "@types/ws": "^8.5.10",
-    "playwright": "^1.42.1",
-    "typescript": "~5.4.3",
+    "playwright": "^1.43.0",
+    "typescript": "~5.4.4",
     "ws": "^8.16.0"
   },
   "engines": {
