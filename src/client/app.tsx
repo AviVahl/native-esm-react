@@ -7,7 +7,7 @@ export interface AppProps {
   renderType: string;
 }
 
-export function App({ renderType }: AppProps) {
+export const App: React.FC<AppProps> = ({ renderType }) => {
   return (
     <>
       <header style={{ paddingTop: "2em" }}>
@@ -26,4 +26,4 @@ export function App({ renderType }: AppProps) {
       </main>
     </>
   );
-}
+};
