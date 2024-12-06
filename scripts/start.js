@@ -51,7 +51,7 @@ const statusReporter = (diagnostic, newLine, options, errorCount) => {
 
 const watchCompilerHost = createWatchCompilerHost(
   tsconfigPath,
-  { noUnusedLocals: false, noUnusedParameters: false },
+  { noUnusedLocals: false, noUnusedParameters: false, jsx: ts.JsxEmit.ReactJSXDev },
   sys,
   undefined,
   undefined,

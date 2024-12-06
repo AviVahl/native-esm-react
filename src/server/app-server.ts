@@ -1,5 +1,5 @@
 import { once } from "node:events";
-import { lstat, readFile } from "node:fs/promises";
+import { lstat } from "node:fs/promises";
 import {
   STATUS_CODES,
   createServer,
@@ -11,25 +11,21 @@ import { join } from "node:path";
 import { URL, fileURLToPath } from "node:url";
 import { Worker } from "node:worker_threads";
 import { WebSocketServer } from "ws";
-import { getContentType, respondWithError, respondWithFile } from "./http.js";
+import { respondWithError, respondWithFile } from "./http.js";
 import { injectLiveClient } from "./live-client.js";
 
 const baseURL = new URL("../..", import.meta.url).href;
 
 export interface StartHttpServerOptions {
   port?: number;
-  production?: boolean;
   live?: boolean;
 }
 
 export async function createAppServer({
   port,
-  production = false,
   live = false,
 }: StartHttpServerOptions = {}) {
   const basePath = fileURLToPath(baseURL);
-  const indexPath = join(basePath, "index.html");
-  const indexContentType = getContentType(indexPath);
 
   let ssrWorker: Worker | undefined;
 
@@ -85,7 +81,7 @@ export async function createAppServer({
         const fsPath = join(basePath, requestPath);
         const fsStats = await safePromise(lstat(fsPath));
         if (fsStats?.isFile()) {
-          await respondWithFile(response, fsPath, fsStats, live, production);
+          await respondWithFile(response, fsPath, fsStats, live);
         } else {
           response.statusCode = 404;
           response.statusMessage = STATUS_CODES[404]!;
@@ -98,13 +94,8 @@ export async function createAppServer({
   }
 
   async function respondWithSSR(response: ServerResponse) {
-    const indexHTML = await readFile(indexPath, "utf8");
     if (!ssrWorker) {
-      const env = production
-        ? { ...process.env, NODE_ENV: "production" }
-        : process.env;
       ssrWorker = new Worker(new URL("./ssr-worker.js", import.meta.url), {
-        env,
         execArgv: process.execArgv,
       });
       try {
@@ -116,23 +107,14 @@ export async function createAppServer({
     }
     ssrWorker.postMessage("render-app");
     const [renderedApp] = (await once(ssrWorker, "message")) as [string];
-    const renderedAppWithHttpAssets = renderedApp.replaceAll(
-      baseURL,
-      localAddress
-    );
-    const htmlWithRenderedApp = indexHTML.replace(
-      `<div id="SITE_MAIN"></div>`,
-      `<div id="SITE_MAIN" data-ssr>${renderedAppWithHttpAssets}</div>`
-    );
-    const modeAdjustedHTML = production
-      ? htmlWithRenderedApp.replaceAll(".development.js", ".production.min.js")
-      : htmlWithRenderedApp;
-    const finalHTML = live
-      ? injectLiveClient(modeAdjustedHTML)
-      : modeAdjustedHTML;
+    const htmlWithAssets = renderedApp.replaceAll(baseURL, localAddress);
+    const htmlWithLiveClient = live
+      ? injectLiveClient(htmlWithAssets)
+      : htmlWithAssets;
+    const finalHTML = `<!DOCTYPE html>${htmlWithLiveClient}`;
     response.statusCode = 200;
     response.statusMessage = STATUS_CODES[200]!;
-    response.setHeader("Content-Type", indexContentType);
+    response.setHeader("Content-Type", "text/html");
     response.end(finalHTML);
   }
 }
