@@ -21,8 +21,8 @@
   },
   "devDependencies": {
     "@types/node": "22",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.1",
     "@types/ws": "^8.5.13",
     "playwright": "^1.49.0",
     "typescript": "~5.7.2",
