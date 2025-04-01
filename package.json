@@ -23,7 +23,7 @@
     "@types/node": "22",
     "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
-    "@types/ws": "^8.18.0",
+    "@types/ws": "^8.18.1",
     "playwright": "^1.51.1",
     "typescript": "~5.8.2",
     "ws": "^8.18.1"
