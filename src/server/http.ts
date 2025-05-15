@@ -17,9 +17,7 @@ export function getContentType(path: string): string {
   const contentType = mime.getType(path) ?? "text/plain";
 
   const isTextFile =
-    contentType.startsWith("text/") ||
-    contentType === "application/json" ||
-    contentType === "application/javascript";
+    contentType.startsWith("text/") || contentType === "application/json" || contentType === "application/javascript";
 
   return isTextFile ? `${contentType}; charset=UTF-8` : contentType;
 }
@@ -28,7 +26,7 @@ export async function respondWithFile(
   response: ServerResponse,
   fsPath: string,
   fsStats: Stats,
-  injectLiveHtml: boolean
+  injectLiveHtml: boolean,
 ) {
   response.statusCode = 200;
   response.statusMessage = STATUS_CODES[200]!;
@@ -38,9 +36,7 @@ export async function respondWithFile(
   const isHtmlFile = fileExtension === ".html" || fileExtension === ".htm";
   if (isHtmlFile && injectLiveHtml) {
     const htmlFileContent = await readFile(fsPath, "utf8");
-    const liveHtml = injectLiveHtml
-      ? injectLiveClient(htmlFileContent)
-      : htmlFileContent;
+    const liveHtml = injectLiveHtml ? injectLiveClient(htmlFileContent) : htmlFileContent;
     response.end(liveHtml);
   } else {
     response.setHeader("Content-Length", fsStats.size);
@@ -54,11 +50,7 @@ export async function respondWithFile(
   }
 }
 
-export function respondWithError(
-  response: ServerResponse,
-  e: unknown,
-  injectLiveHtml: boolean
-) {
+export function respondWithError(response: ServerResponse, e: unknown, injectLiveHtml: boolean) {
   response.statusCode = 500;
   response.statusMessage = STATUS_CODES[500]!;
   if (!response.headersSent) {

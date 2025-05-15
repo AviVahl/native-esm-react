@@ -11,12 +11,8 @@ const {
   createWatchProgram,
 } = ts;
 
-const tsconfigPath = fileURLToPath(
-  new URL("../tsconfig.json", import.meta.url)
-);
-const serverMainPath = fileURLToPath(
-  new URL("../dist/server/main.js", import.meta.url)
-);
+const tsconfigPath = fileURLToPath(new URL("../tsconfig.json", import.meta.url));
+const serverMainPath = fileURLToPath(new URL("../dist/server/main.js", import.meta.url));
 
 const serverArgs = process.argv.slice(2);
 
@@ -33,9 +29,7 @@ async function refreshCliProcess() {
       execArgv: ["--enable-source-maps"],
     });
   }
-  console.log(
-    `node --enable-source-maps ${serverMainPath} ${serverArgs.join(" ")}`
-  );
+  console.log(`node --enable-source-maps ${serverMainPath} ${serverArgs.join(" ")}`);
 }
 
 /** @type import('typescript').WatchStatusReporter */
@@ -55,7 +49,7 @@ const watchCompilerHost = createWatchCompilerHost(
   sys,
   undefined,
   undefined,
-  statusReporter
+  statusReporter,
 );
 
 createWatchProgram(watchCompilerHost);

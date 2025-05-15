@@ -14,7 +14,7 @@ async function onMessage(message: unknown) {
     const html = renderToString(
       <StrictMode>
         <App />
-      </StrictMode>
+      </StrictMode>,
     );
     parentPort!.postMessage(html);
   }

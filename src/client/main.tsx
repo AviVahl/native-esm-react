@@ -6,5 +6,5 @@ hydrateRoot(
   document,
   <StrictMode>
     <App />
-  </StrictMode>
+  </StrictMode>,
 );

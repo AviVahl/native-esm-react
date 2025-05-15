@@ -22,10 +22,7 @@ export const App: React.FC = () => {
         </header>
         <main>
           <h1>Native ESM React Example</h1>
-          <section>
-            Showcase an approach to load a native ESM React application in the
-            browser and Node.js.
-          </section>
+          <section>Showcase an approach to load a native ESM React application in the browser and Node.js.</section>
         </main>
         <script type="module" src="dist/client/main.js"></script>
       </body>

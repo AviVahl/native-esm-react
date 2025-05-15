@@ -48,5 +48,8 @@
     "url": "https://github.com/AviVahl/native-esm-react/issues"
   },
   "homepage": "https://github.com/AviVahl/native-esm-react#readme",
-  "prettier": {}
+  "prettier": {
+    "printWidth": 120,
+    "endOfLine": "auto"
+  }
 }

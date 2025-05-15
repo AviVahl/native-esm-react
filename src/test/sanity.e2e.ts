@@ -26,9 +26,7 @@ describe("sanity e2e", () => {
       const page = await browser.newPage();
       await page.goto(appServer.localAddress);
 
-      assert.ok(
-        await page.locator("text=Native ESM React Example").isVisible()
-      );
+      assert.ok(await page.locator("text=Native ESM React Example").isVisible());
     });
   }
 });

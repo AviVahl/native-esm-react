@@ -1,11 +1,6 @@
 import { once } from "node:events";
 import { lstat } from "node:fs/promises";
-import {
-  STATUS_CODES,
-  createServer,
-  type IncomingMessage,
-  type ServerResponse,
-} from "node:http";
+import { STATUS_CODES, createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import type { AddressInfo } from "node:net";
 import { join } from "node:path";
 import { URL, fileURLToPath } from "node:url";
@@ -21,10 +16,7 @@ export interface StartHttpServerOptions {
   live?: boolean;
 }
 
-export async function createAppServer({
-  port,
-  live = false,
-}: StartHttpServerOptions = {}) {
+export async function createAppServer({ port, live = false }: StartHttpServerOptions = {}) {
   const basePath = fileURLToPath(baseURL);
 
   let ssrWorker: Worker | undefined;
@@ -65,15 +57,10 @@ export async function createAppServer({
     }
   }
 
-  async function httpRequestHandler(
-    request: IncomingMessage,
-    response: ServerResponse
-  ): Promise<void> {
+  async function httpRequestHandler(request: IncomingMessage, response: ServerResponse): Promise<void> {
     try {
       // ignore searchParams and hash, and then decode escaped characters (e.g. %20 -> space)
-      const requestPath = decodeURI(
-        new URL(request.url ?? "", localAddress).pathname
-      );
+      const requestPath = decodeURI(new URL(request.url ?? "", localAddress).pathname);
 
       if (requestPath === "/") {
         await respondWithSSR(response);
@@ -108,9 +95,7 @@ export async function createAppServer({
     ssrWorker.postMessage("render-app");
     const [renderedApp] = (await once(ssrWorker, "message")) as [string];
     const htmlWithAssets = renderedApp.replaceAll(baseURL, localAddress);
-    const htmlWithLiveClient = live
-      ? injectLiveClient(htmlWithAssets)
-      : htmlWithAssets;
+    const htmlWithLiveClient = live ? injectLiveClient(htmlWithAssets) : htmlWithAssets;
     const finalHTML = `<!DOCTYPE html>${htmlWithLiveClient}`;
     response.statusCode = 200;
     response.statusMessage = STATUS_CODES[200]!;
