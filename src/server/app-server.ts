@@ -31,6 +31,7 @@ export async function createAppServer({ port, live = false }: StartHttpServerOpt
   return {
     localAddress,
     close,
+    [Symbol.asyncDispose]: close,
     reload,
   };
 
