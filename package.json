@@ -12,7 +12,7 @@
     "preserver": "npm run build",
     "server": "node --enable-source-maps dist/server/main.js",
     "pretest": "npm run build",
-    "test": "node --test --enable-source-maps"
+    "test": "node --test --enable-source-maps \"dist/test/**/*.e2e.js\""
   },
   "dependencies": {
     "mime": "^4.0.7",
