@@ -25,7 +25,7 @@
     "@types/react-dom": "^19.1.6",
     "@types/ws": "^8.18.1",
     "playwright": "^1.53.1",
-    "prettier": "^3.6.1",
+    "prettier": "^3.6.2",
     "typescript": "~5.8.3",
     "ws": "^8.18.2"
   },
