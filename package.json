@@ -22,7 +22,7 @@
   "devDependencies": {
     "@types/node": "22",
     "@types/react": "^19.1.9",
-    "@types/react-dom": "^19.1.6",
+    "@types/react-dom": "^19.1.7",
     "@types/ws": "^8.18.1",
     "playwright": "^1.54.1",
     "prettier": "^3.6.2",
