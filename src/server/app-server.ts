@@ -83,9 +83,7 @@ export async function createAppServer({ port, live = false }: StartHttpServerOpt
 
   async function respondWithSSR(response: ServerResponse) {
     if (!ssrWorker) {
-      ssrWorker = new Worker(new URL("./ssr-worker.js", import.meta.url), {
-        execArgv: process.execArgv,
-      });
+      ssrWorker = new Worker(new URL("./ssr-worker.js", import.meta.url));
       try {
         await once(ssrWorker, "online");
       } catch (e) {
