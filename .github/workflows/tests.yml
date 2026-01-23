@@ -15,5 +15,5 @@ jobs:
         with:
           node-version-file: .nvmrc
       - run: npm ci
-      - run: npx playwright install --with-deps
+      - run: npx playwright install chromium firefox
       - run: npm test
