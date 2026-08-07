@@ -27,7 +27,7 @@
     "playwright": "^1.62.1",
     "prettier": "^3.9.6",
     "typescript": "~7.0.2",
-    "ws": "^8.21.2"
+    "ws": "^8.21.3"
   },
   "engines": {
     "node": ">=24",
