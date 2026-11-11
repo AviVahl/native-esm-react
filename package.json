@@ -25,9 +25,9 @@
     "@types/react-dom": "^19.3.0",
     "@types/ws": "^8.18.2",
     "playwright": "^1.65.0",
-    "prettier": "^3.9.10",
+    "prettier": "^3.10.0",
     "typescript": "~7.0.2",
-    "ws": "^8.22.1"
+    "ws": "^8.22.2"
   },
   "engines": {
     "node": ">=24",
